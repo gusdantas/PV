@@ -14,6 +14,7 @@
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgcodecs.hpp>
+#include <opencv2/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <iostream>
 #include <vector>
@@ -22,15 +23,16 @@
 using namespace cv;
 using namespace std;
 
-
-
-/*Mat media(int aresta, Mat input){
+Mat media(int aresta, Mat input){
 
 	Mat output = input;
+	int meio = aresta/2;
 	int linha = input.rows;
 	int coluna = input.cols;
 	vector< vector<int> > janela;
-	// Set up sizes. (HEIGHT x WIDTH)
+	vector<int> vetorMediana;
+	vetorMediana.resize(aresta*aresta);
+
 	janela.resize(aresta);
 	for (int i=0; i < aresta; i++){
 		janela[i].resize(aresta);
@@ -38,112 +40,44 @@ using namespace std;
 
 	for (int i=0; i<linha; i++){
 		for (int j=0; j<coluna; j++){
+
+			int posMediana = 0;
 			int somaJanela = 0;
-			int outputValue = 0;
 
-			for (int x=-aresta/2; x==aresta/2; x++){
-				for (int y=-aresta/2; y==aresta/2; y++){
-					if (input.at<int>(Point(i+x,j+y)) == ptr){
-						janela[x][y] = 0;
-					}else{
-						janela[x][y] = input.at<int>(Point(i+x,j+y));
-						somaJanela += janela[x][y];
+			for (int x=-meio; x<meio+1; x++){
+				int ij = 0;
+				for (int y=-meio; y<meio+1; y++){
+					int jj = 0;
+					if (i+x < 0 || i+x >= linha || j+y < 0 || j+y >= coluna){
+						janela[ij][jj] = 0;
+					}else {
+						janela[ij][jj] = input.at<uchar>(Point(i+x,j+y));
+						somaJanela += janela[ij][jj];
 					}
+					vetorMediana[posMediana] = janela[ij][jj];
+					posMediana++;
+					jj++;
 				}
+				ij++;
 			}
-			outputValue = somaJanela/(aresta^2);
-			output.at<int>(Point(i,j)) = outputValue;
-		}
-	}
-
-
-
-	/*for (int i=0; i<linha; i++){
-		for (int j=0; j<coluna; j++){
-			if (point[0] == 0){
-				if (point[1] == 0) {
-					a = input.at<int>(Point(i,j));
-					b = input.at<int>(Point(i,j+1));
-					c = input.at<int>(Point(i+1,j));
-					d = input.at<int>(Point(i+1,j+1));
-					output.at<int>(Point(i,j)) = (a+b+c+d)/4;
-				}else if (point[1]>0 && point[1]<(coluna-1)){
-					a = input.at<int>(Point(i,j-1));
-					b = input.at<int>(Point(i,j));
-					c = input.at<int>(Point(i,j+1));
-					d = input.at<int>(Point(i+1,j-1));
-					e = input.at<int>(Point(i+1,j));
-					f = input.at<int>(Point(i+1,j+1));
-					output.at<int>(Point(i,j)) = (a+b+c+d+e+f)/6;
-				}else{
-					a = input.at<int>(Point(i,j-1));
-					b = input.at<int>(Point(i,j));
-					c = input.at<int>(Point(i+1,j-1));
-					d = input.at<int>(Point(i+1,j));
-					output.at<int>(Point(i,j)) = (a+b+c+d)/4;
-				}
-			}else if (point[0]>0 && point[0]<(linha-1)){
-				if (point[1] == 0) {
-					a = input.at<int>(Point(i-1,j));
-					b = input.at<int>(Point(i-1,j+1));
-					c = input.at<int>(Point(i,j));
-					d = input.at<int>(Point(i,j+1));
-					e = input.at<int>(Point(i+1,j));
-					f = input.at<int>(Point(i+1,j+1));
-					output.at<int>(Point(i,j)) = (a+b+c+d+e+f)/6;
-				}else if (point[1]>0 && point[1]<(coluna-1)){
-					a = input.at<int>(Point(i-1,j-1));
-					b = input.at<int>(Point(i-1,j));
-					c = input.at<int>(Point(i-1,j+1));
-					d = input.at<int>(Point(i,j-1));
-					e = input.at<int>(Point(i,j));
-					f = input.at<int>(Point(i,j+1));
-					g = input.at<int>(Point(i+1,j-1));
-					h = input.at<int>(Point(i+1,j));
-					i = input.at<int>(Point(i+1,j+1));
-					output.at<int>(Point(i,j)) = (a+b+c+d+e+f+g+h+i)/9;
-				}else{
-					a = input.at<int>(Point(i-1,j-1));
-					b = input.at<int>(Point(i-1,j));
-					c = input.at<int>(Point(i,j-1));
-					d = input.at<int>(Point(i,j));
-					e = input.at<int>(Point(i+1,j-1));
-					f = input.at<int>(Point(i+1,j));
-					output.at<int>(Point(i,j)) = (a+b+c+d+e+f)/4;
-				}
-			}else{
-				if (point[1] == 0) {
-					a = input.at<int>(Point(i-1,j));
-					b = input.at<int>(Point(i-1,j+1));
-					c = input.at<int>(Point(i,j));
-					d = input.at<int>(Point(i,j+1));
-					output.at<int>(Point(i,j)) = (a+b+c+d)/4;
-				}else if (point[1]>0 && point[1]<(coluna-1)){
-					int a = input.at<int>(Point(i-1,j-1));
-					int b = input.at<int>(Point(i-1,j));
-					int c = input.at<int>(Point(i-1,j+1));
-					int d = input.at<int>(Point(i,j-1));
-					int e = input.at<int>(Point(i,j));
-					int f = input.at<int>(Point(i,j+1));
-					output.at<int>(Point(i,j)) = (a+b+c+d+e+f)/6;
-				}else{
-					int a = input.at<int>(Point(i-1,j-1));
-					int b = input.at<int>(Point(i-1,j));
-					int c = input.at<int>(Point(i,j-1));
-					int d = input.at<int>(Point(i,j));
-					output.at<int>(Point(i,j)) = (a+b+c+d)/4;
-				}
+			//sort(vetorMediana.begin(),vetorMediana.end());
+			int outputMediana = vetorMediana[meio+1];
+			for (int v=0;v!=(aresta*aresta);v++){
+				cout << vetorMediana[v]<< " ";
 			}
+			cout<< "=> "<<outputMediana<<endl;
+			//int outputMedia = somaJanela/(aresta*aresta);
+			output.at<uchar>(Point(i,j)) = outputMediana;
 		}
 	}
 	return output;
-}*/
+}
 
 int main()
 {
 
     Mat image, newImage; // mat to storage image.
-    image = imread( "lenna512.png", 1 ); //Load the image.
+    image = imread( "lenna512.png", 0 ); //Load the image.
     newImage = image;
 
     if( image.empty() ) // Check for invalid input.
@@ -155,45 +89,19 @@ int main()
     namedWindow( "Read, Show and Save Image - window", WINDOW_AUTOSIZE ); // Create a window for display.
     imshow( "Read, Show and Save Image - window", image );
 
-    //cout << "R (default) = " << endl <<        image           << endl << endl;
+	Mat blurred = image;
 
-	Mat output = image;
-	int aresta = 3;
-	int linha = image.rows;
-	int coluna = image.cols;
-	vector< vector<int> > janela;
-	// Set up sizes. (HEIGHT x WIDTH)
-	janela.resize(aresta);
-	for (int i=0; i < aresta; i++){
-		janela[i].resize(aresta);
-	}
+	//medianBlur(image,blurred,3);
 
-	for (int i=0; i<linha; i++){
-		for (int j=0; j<coluna; j++){
-			int somaJanela = 0;
-			int outputValue = 0;
+    newImage = media(3,image);
 
-			for (int x=-aresta/2; x==aresta/2; x++){
-				for (int y=-aresta/2; y==aresta/2; y++){
-					//if (image.at<int>(Point(i+x,j+y)) == ptr){
-					//	janela[x][y] = 0;
-					//}else{
-						janela[x][y] = image.at<int>(Point(i+x,j+y));
-						//somaJanela += janela[x][y];
-					//}
-				}
-			}
-			//outputValue = somaJanela/(aresta^2);
-			//output.at<int>(Point(i,j)) = outputValue;
-		}
-	}
+    namedWindow( "Filter", WINDOW_AUTOSIZE ); // Create a window for display.
+    imshow( "Filter", newImage );
 
-    //newImage = media(3,image);
+    //namedWindow( "Blur", WINDOW_AUTOSIZE ); // Create a window for display.
+    //imshow( "Blur", blurred );
 
-    namedWindow( "New Image", WINDOW_AUTOSIZE ); // Create a window for display.
-    imshow( "New Image", newImage );
-
-    imwrite( "novaLena.jpg", image );              // save your image with another name.
+    imwrite( "novaLena.jpg", image ); // save your image with another name.
 
     waitKey(0); // Wait for a keystroke in the window, Esc for exit.
     return 0;
