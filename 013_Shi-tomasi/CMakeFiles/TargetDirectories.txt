@@ -1,0 +1,1 @@
+/home/ufabc/Área de Trabalho/013_Shi-tomasi/CMakeFiles/Shi.dir

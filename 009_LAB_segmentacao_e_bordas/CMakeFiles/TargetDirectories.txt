@@ -1,0 +1,1 @@
+/home/ufabc/Área de Trabalho/009_LAB_segmentacao_e_bordas/CMakeFiles/loadVideo.dir

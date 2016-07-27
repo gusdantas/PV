@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ufabc/Área de Trabalho/007/videoWriter.cpp
+opencv2/opencv.hpp
+/home/ufabc/Área de Trabalho/007/opencv2/opencv.hpp
+opencv2/core/core.hpp
+-
+opencv2/videoio/videoio.hpp
+-
+

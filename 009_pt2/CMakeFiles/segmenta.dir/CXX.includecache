@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ufabc/Área de Trabalho/009_pt2/segmentaImage.cpp
+opencv2/core/core.hpp
+-
+opencv2/imgcodecs.hpp
+-
+opencv2/imgproc.hpp
+/home/ufabc/Área de Trabalho/009_pt2/opencv2/imgproc.hpp
+stdio.h
+-
+opencv2/highgui/highgui.hpp
+-
+iostream
+-
+vector
+-
+cstddef
+-
+

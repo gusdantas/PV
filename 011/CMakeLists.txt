@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 2.8)
+project( backSub )
+find_package( OpenCV REQUIRED )
+add_executable( backSub bg_sub.cpp )
+target_link_libraries( backSub ${OpenCV_LIBS} )

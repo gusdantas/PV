@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 2.8)
+project( saveVideo )
+find_package( OpenCV REQUIRED )
+add_executable( saveVideo videoWriter.cpp )
+target_link_libraries( saveVideo ${OpenCV_LIBS} )
