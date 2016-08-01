@@ -1,0 +1,7 @@
+02:03:43 **** Incremental Build of configuration Debug for project T1 ****
+Info: Internal Builder is used for build
+g++ "-IC:\\opencv\\build\\include" -O0 -g3 -Wall -c -fmessage-length=0 -o CreateCharVid.o "..\\CreateCharVid.cpp" 
+g++ "-LC:\\opencv\\MinGW\\bin" -o T1.exe CreateCharVid.o -llibopencv_imgcodecs300 -llibopencv_imgproc300 -llibopencv_highgui300 -llibopencv_video300 -llibopencv_core300 -llibopencv_videoio300 
+
+02:03:45 Build Finished (took 2s.718ms)
+

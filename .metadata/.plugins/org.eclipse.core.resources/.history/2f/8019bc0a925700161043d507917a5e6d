@@ -1,0 +1,73 @@
+// Code to:
+// Capture video from webcam (do not forget to acesse like sudo su).
+// Show video capture in the window.
+// Save the first image.
+// Save the video until ESC key be pressed.
+
+
+// To run type on terminal: 
+// "sudo cmake ." (to build CMake Files)
+// "make" (to build the application)
+// "./saveVideo" (to execute the application)
+
+// Remenber to: 
+// Use terminal like super user (sudo su)
+// If find an error to acess CMakeFile type "sudo chmod 777 -R CMakeFiles" (to get permissions to read the folder)
+
+#include "opencv2/opencv.hpp"
+#include <opencv2/core/core.hpp>      
+#include <opencv2/videoio/videoio.hpp> 
+
+using namespace cv;
+
+int main()
+{
+    VideoCapture camera0(0); // Objject to camera capturing by device zero..
+    //VideoCapture camera1(1);
+    //VideoCapture camera2(2);
+    //if( !camera0.isOpened() && !camera0.isOpened() && !camera0.isOpened() ) return 1; // Check if camera is ready.
+
+    if( !camera0.isOpened() ) return 1; // Check if camera is ready.
+
+    // Container to MJPEG codification as .avi video in 15 frames per second and 640 by 480 resolution.
+    VideoWriter video("outputVideo.avi", VideoWriter::fourcc('M','J', 'P', 'G'), 15, Size(1920, 480), true);
+
+    // Loop to build video
+    while(true) {
+       
+        Mat3b frame0, frame1, frame2, merged_frame, roi; // Container for image.
+        
+        camera0 >> frame0; // Put capture bytes inside the image container.
+        //camera1 >> frame1;
+        //camera2 >> frame2;
+        
+        /*merged_frame = Mat(Size(1920, 480), CV_8UC3);
+        roi = Mat(merged_frame, Rect(0, 0, 640, 480));
+		frame0.copyTo(roi);
+		roi = Mat(merged_frame, Rect(640, 0, 640, 480));
+		frame1.copyTo(roi);
+		roi = Mat(merged_frame, Rect(1280, 0, 640, 480));
+		frame2.copyTo(roi);*/
+		
+		imshow("im0", frame0);
+        video << frame0; // Put image inside video container.
+
+		/*imshow("im1", frame1);
+		imshow("im2", frame2);
+        
+        imshow("im3", merged_frame); // Show current image of the video.
+        video << merged_frame*/ // Put image inside video container.
+
+        //Finish application by Esc key pressed.
+        char ch =  waitKey(25);  // Wait for 25 ms for user to hit any key
+		if(ch==27) break;  // If Escape Key was hit just exit the loop 
+		
+		if(ch=='s' || ch=='S') // Save image if s was keyboard
+		{
+			imwrite("imgSaved.bmp", frame0);			
+		}
+		
+    }
+
+    return 0;
+}
